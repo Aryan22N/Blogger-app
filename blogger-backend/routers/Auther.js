@@ -7,8 +7,8 @@ router.get('/authlist',AuthController.getAutherDetail)
 
 router.post('/addauth', Auth.verifyToken, AuthController.addAutherDetail)
 
-router.put('/updateauth/:cid',AuthController.updateAutherDetail)
+router.put('/updateauth/:cid', Auth.verifyToken, AuthController.updateAutherDetail)
 
-router.delete('/deleteauth/:cid',AuthController.deleteAutherDetail)
+router.delete('/deleteauth/:cid', Auth.verifyToken, AuthController.deleteAutherDetail)
 
 module.exports = router;

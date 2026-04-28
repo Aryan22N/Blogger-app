@@ -5,10 +5,10 @@ const auth = require('../helper/auth');
 
 router.get('/catlist', auth.verifyToken, catController.getAllCatList)
 
-router.post('/addcat',catController.addCategory)
+router.post('/addcat', auth.verifyToken, catController.addCategory)
 
-router.put('/updatecat/:cid', catController.updatecat)
+router.put('/updatecat/:cid', auth.verifyToken, catController.updatecat)
 
-router.delete('/deletecat/:cid', catController.deletecat)
+router.delete('/deletecat/:cid', auth.verifyToken, catController.deletecat)
 
 module.exports = router;

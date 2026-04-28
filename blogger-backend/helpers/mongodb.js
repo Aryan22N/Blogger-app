@@ -1,6 +1,6 @@
 const MongoClient = require( 'mongodb' ).MongoClient;
 // Connection URL
-const url = 'mongodb://127.0.0.1:27017';
+const url = process.env.MONGODB_LOCAL_URI || 'mongodb://127.0.0.1:27017';
 const client = new MongoClient(url);
 
 // Database Name

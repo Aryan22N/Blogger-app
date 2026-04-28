@@ -1,5 +1,5 @@
 const Users = require('../schemas/users-schema');
-const md5 = require("md5");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const getUserData = async () => {
@@ -16,7 +16,8 @@ const getUserData = async () => {
 const addUser = async (userData) => {
   try {
     console.log(userData);
-    userData.password = md5(userData.password);
+    const salt = await bcrypt.genSalt(10);
+    userData.password = await bcrypt.hash(userData.password, salt);
     console.log(userData);
     const insertResult = await Users.insertMany(userData);
     console.log(insertResult);
@@ -29,16 +30,19 @@ const addUser = async (userData) => {
 
 const loginUserdata = async (userData) => {
     try {
-        // Hash the input password using MD5
         const {email, password} = userData;
-        const hashedPassword = md5(password);
-        console.log('hashpassword', hashedPassword);
 
-        // Find user with email and hashed password
-        // SELECT * FROM user WHERE email=${email} AND password=${hashedPassword}
-        const user = await Users.findOne({ email, password: hashedPassword });
+        // Find user with email
+        const user = await Users.findOne({ email });
         console.log(user);
+        
         if (!user) {
+            return { success: false, message: 'Invalid email or password' };
+        }
+
+        // Compare password with hashed password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
             return { success: false, message: 'Invalid email or password' };
         }
 

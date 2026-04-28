@@ -1,5 +1,4 @@
-
-const md5 = require('md5');
+const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const { connectDB } = require('../helpers/mongodb');
 
@@ -19,11 +18,16 @@ let getusers = async (req, res) => {
 let login = async (req, res) => {
     try {
         let { email, password } = req.body;
-        let incPassword = md5(password);
-        let user = await Users.findOne({ email: email, password: incPassword });
+        let user = await Users.findOne({ email: email });
+        
         if (user) {
-            let token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET || 'sdscus123;', { expiresIn: '1h' });
-            res.status(200).json({ token: token, message: "Login successful", first_name: user.fname });
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (isMatch) {
+                let token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+                res.status(200).json({ token: token, message: "Login successful", first_name: user.fname });
+            } else {
+                res.status(401).json({ error: "Invalid credentials" });
+            }
         } else {
             res.status(401).json({ error: "Invalid credentials" });
         }
@@ -51,7 +55,8 @@ let getuserbyid = async (req, res) => {
 let addUser = async (req, res) => {
     console.log(req.body);
     let {password} = req.body;
-    let incPassword = md5(password);
+    const salt = await bcrypt.genSalt(10);
+    let incPassword = await bcrypt.hash(password, salt);
     let userData = {...req.body, password: incPassword}
 
     console.log(userData);
