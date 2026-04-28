@@ -15,6 +15,19 @@ import Category from './Pages/Categoray/Categoray';
 import Loginform from './Pages/login/Loginform';
 import Logout from './Pages/Logout/Logout';
 import Registerform from './Pages/login/Registerform';
+import axios from 'axios';
+
+// Add a response interceptor
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      alert("login to the app to use the feature");
+      window.location.href = '/';
+    }
+    return Promise.reject(error);
+  }
+);
 
 
 function App() {
