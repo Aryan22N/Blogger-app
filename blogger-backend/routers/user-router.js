@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/user-controller');
-const validation = require('../helpers/validation');
-const auth = require('../helpers/auth');
+const validation = require('../helper/validation');
+const auth = require('../helper/auth');
 
 // CRUD
 // C - Create

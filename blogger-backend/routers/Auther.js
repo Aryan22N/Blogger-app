@@ -3,7 +3,7 @@ const router = express.Router()
 const AuthController = require('../controllers/Auther-controller');
 const Auth = require('../helper/auth');
 
-router.get('/authlist',AuthController.getAutherDetail)
+router.get('/authlist', Auth.verifyToken, AuthController.getAutherDetail)
 
 router.post('/addauth', Auth.verifyToken, AuthController.addAutherDetail)
 

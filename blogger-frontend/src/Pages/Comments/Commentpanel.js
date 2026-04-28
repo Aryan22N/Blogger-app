@@ -21,7 +21,11 @@ const Commentpanel = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/comment/commentsData`)
+      .get(`${process.env.REACT_APP_API_URL}/comment/commentsdata`, {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
       .then((response) => {
         console.log(response.data)
         setauthor(response.data);

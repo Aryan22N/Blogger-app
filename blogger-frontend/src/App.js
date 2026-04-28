@@ -21,7 +21,8 @@ import axios from 'axios';
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+    const isLoginRequest = error.config && error.config.url && error.config.url.includes('/login');
+    if (error.response && (error.response.status === 401 || error.response.status === 403) && !isLoginRequest) {
       alert("login to the app to use the feature");
       window.location.href = '/';
     }

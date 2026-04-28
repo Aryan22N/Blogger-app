@@ -48,7 +48,11 @@ const Authorpanel = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/author/authlist`)
+      .get(`${process.env.REACT_APP_API_URL}/author/authlist`, {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
       .then((response) => {
         console.log(response.data)
         setauthor(response.data);
